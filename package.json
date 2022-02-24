@@ -1,6 +1,6 @@
 {
   "name": "tabbit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Convert indentation to tabs.",
   "main": "./src/tabbit.js",
   "bin": {

@@ -1,5 +1,4 @@
-const pj = require("../package.json");
 
 
-
-console.log(`Tabbit (${pj.version})`);
+const paths = process.argv.slice(2);
+console.log(paths);
