@@ -1,8 +1,11 @@
 {
   "name": "tabbit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Convert indentation to tabs.",
-  "main": "src/tabbit.js",
+  "main": "./src/tabbit.js",
+  "bin": {
+    "tabbit": "./src/tabbit.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
