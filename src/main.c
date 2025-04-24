@@ -11,11 +11,21 @@
 #define READ_BUFFER_SIZE 8192
 #define MAX_FILE_SIZE (1024 * 1024)
 
-const char *known_extensions[] = {
-	".c", ".cpp", ".h", ".py", ".java", ".js", ".ts", ".go", ".rb", NULL
+const char *KNOWN_EXTENSIONS[] = {
+	".c", ".cpp", ".h", ".hpp",
+	".java", ".cs",
+	".py", ".rb",
+	".go", ".rs",
+
+	".html", ".xhtml", ".xml",
+	".css", ".scss", ".sass",
+	".js", ".ts", ".jsx", ".tsx",
+	".svelte", ".vue",
+
+	NULL
 };
 
-const char *skip_dirs[] = {
+const char *SKIP_DIR_NAMES[] = {
 	"node_modules", "build", "dist", "out", "output",
 	"debug", "release", "bin", "obj",
 	"venv", ".venv", "__pycache__",
@@ -28,8 +38,8 @@ const char *skip_dirs[] = {
 bool has_known_extension(const char *filename) {
 	const char *ext = strrchr(filename, '.');
 	if (!ext) return false;
-	for (int i = 0; known_extensions[i]; i++) {
-		if (strcmp(ext, known_extensions[i]) == 0)
+	for (int i = 0; KNOWN_EXTENSIONS[i]; i++) {
+		if (strcmp(ext, KNOWN_EXTENSIONS[i]) == 0)
 			return true;
 	}
 	return false;
@@ -40,8 +50,8 @@ bool is_hidden(const char *name) {
 }
 
 bool is_skipped_dir(const char *name) {
-	for (int i = 0; skip_dirs[i]; i++) {
-		if (strcmp(name, skip_dirs[i]) == 0)
+	for (int i = 0; SKIP_DIR_NAMES[i]; i++) {
+		if (strcmp(name, SKIP_DIR_NAMES[i]) == 0)
 			return true;
 	}
 	return false;
