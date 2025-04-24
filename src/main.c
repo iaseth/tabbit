@@ -8,6 +8,7 @@
 #define VERSION "0.1.0"
 #define MAX_PATH 4096
 #define MAX_LINE 8192
+#define READ_BUFFER_SIZE 8192
 #define MAX_FILE_SIZE (1024 * 1024)
 
 const char *known_extensions[] = {
@@ -54,6 +55,21 @@ bool is_dir(const char *path) {
 bool file_too_large(const char *path) {
 	struct stat s;
 	return stat(path, &s) == 0 && s.st_size > MAX_FILE_SIZE;
+}
+
+bool print_file(const char *path) {
+	FILE *file = fopen(path, "r");
+	if (file == NULL) return true;
+
+	char buff[READ_BUFFER_SIZE];
+	size_t n;
+	while ((n = fread(buff, sizeof(char), sizeof(buff) - 1, file)) > 0) {
+		buff[n] = '\0';
+		printf("%s", buff);
+	}
+
+	fclose(file);
+	return false;
 }
 
 void print_help() {
@@ -120,7 +136,6 @@ char *indent_line(const char *line, int tab_width, bool use_spaces) {
 }
 
 bool process_file(const char *path, bool replace, int tab_width, bool use_spaces) {
-	printf("Path: '%s'\n", path);
 	FILE *in = fopen(path, "r");
 	if (!in) return false;
 
@@ -144,6 +159,10 @@ bool process_file(const char *path, bool replace, int tab_width, bool use_spaces
 
 	fclose(in);
 	fclose(out);
+
+	if (!replace) {
+		print_file(tmp_path);
+	}
 
 	if (changed && replace) {
 		remove(path);
