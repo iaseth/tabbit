@@ -7,5 +7,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 add_executable(
 	tabbit
 	src/args.c
+	src/fsutils.c
+	src/utils.c
 	src/main.c
 )
