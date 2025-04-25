@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <sys/stat.h>
 
+#include "args.h"
+
 #define VERSION "0.1.0"
 #define MAX_PATH 4096
 #define MAX_LINE 8192
@@ -145,7 +147,7 @@ char *indent_line(const char *line, int tab_width, bool use_spaces) {
 	return buf;
 }
 
-bool process_file(const char *path, bool replace, int tab_width, bool use_spaces) {
+bool process_file(const char *path, struct Args args) {
 	FILE *in = fopen(path, "r");
 	if (!in) return false;
 
@@ -161,7 +163,7 @@ bool process_file(const char *path, bool replace, int tab_width, bool use_spaces
 	char line[MAX_LINE];
 
 	while (fgets(line, sizeof(line), in)) {
-		char *indented = indent_line(line, tab_width, use_spaces);
+		char *indented = indent_line(line, args.tab_width, args.use_spaces);
 		if (strcmp(line, indented) != 0)
 			changed = true;
 		fputs(indented, out);
@@ -170,11 +172,11 @@ bool process_file(const char *path, bool replace, int tab_width, bool use_spaces
 	fclose(in);
 	fclose(out);
 
-	if (!replace) {
+	if (!args.replace) {
 		print_file(tmp_path);
 	}
 
-	if (changed && replace) {
+	if (changed && args.replace) {
 		remove(path);
 		rename(tmp_path, path);
 	} else {
@@ -184,7 +186,7 @@ bool process_file(const char *path, bool replace, int tab_width, bool use_spaces
 	return true;
 }
 
-void traverse_dir(const char *path, bool recursive, bool force, bool replace, int tab_width, bool use_spaces) {
+void traverse_dir(const char *path, struct Args args) {
 	DIR *dir = opendir(path);
 	if (!dir) return;
 
@@ -200,12 +202,12 @@ void traverse_dir(const char *path, bool recursive, bool force, bool replace, in
 
 		snprintf(full_path, sizeof(full_path), "%s/%s", path, entry->d_name);
 
-		if (entry->d_type == DT_DIR && recursive) {
-			traverse_dir(full_path, recursive, force, replace, tab_width, use_spaces);
+		if (entry->d_type == DT_DIR && args.recursive) {
+			traverse_dir(full_path, args);
 		} else if (entry->d_type == DT_REG) {
-			if ((has_known_extension(entry->d_name) || force) &&
-				(force || !file_too_large(full_path))) {
-				process_file(full_path, replace, tab_width, use_spaces);
+			if ((has_known_extension(entry->d_name) || args.force) &&
+				(args.force || !file_too_large(full_path))) {
+				process_file(full_path, args);
 			}
 		}
 	}
@@ -214,9 +216,13 @@ void traverse_dir(const char *path, bool recursive, bool force, bool replace, in
 }
 
 int main(int argc, char **argv) {
-	bool force = false, directory = false, recursive = false;
-	bool replace = false, use_spaces = false;
-	int tab_width = 4;
+	struct Args args;
+	args.force = false;
+	args.directory = false;
+	args.recursive = false;
+	args.replace = false;
+	args.use_spaces = false;
+	args.tab_width = 4;
 
 	const char *paths[argc];
 	int path_count = 0;
@@ -224,18 +230,18 @@ int main(int argc, char **argv) {
 	// First pass: parse flags
 	for (int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--force") == 0)
-			force = true;
+			args.force = true;
 		else if (strcmp(argv[i], "-d") == 0 || strcmp(argv[i], "--directory") == 0)
-			directory = true;
+			args.directory = true;
 		else if (strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "--recursive") == 0)
-			recursive = true;
+			args.recursive = true;
 		else if (strcmp(argv[i], "-x") == 0 || strcmp(argv[i], "--replace") == 0)
-			replace = true;
+			args.replace = true;
 		else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--spaces") == 0)
-			use_spaces = true;
+			args.use_spaces = true;
 		else if ((strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--tab-width") == 0) && i + 1 < argc) {
-			tab_width = atoi(argv[++i]);
-			if (tab_width <= 0) tab_width = 4;
+			args.tab_width = atoi(argv[++i]);
+			if (args.tab_width <= 0) args.tab_width = 4;
 		} else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
 			print_help();
 			return 0;
@@ -256,12 +262,12 @@ int main(int argc, char **argv) {
 	for (int i = 0; i < path_count; i++) {
 		const char *path = paths[i];
 		if (is_dir(path)) {
-			if (directory) {
-				traverse_dir(path, recursive, force, replace, tab_width, use_spaces);
+			if (args.directory) {
+				traverse_dir(path, args);
 			}
 		} else {
-			if (force || !file_too_large(path)) {
-				process_file(path, replace, tab_width, use_spaces);
+			if (args.force || !file_too_large(path)) {
+				process_file(path, args);
 			}
 		}
 	}
