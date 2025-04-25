@@ -43,6 +43,7 @@ void print_help() {
 		"\n"
 		"  -a, --args          Print args\n"
 		"  -l, --list          Lists matching files\n"
+		"  -u, --update        Lists files needing updates\n"
 
 		"\n"
 		"  -h, --help          Show help message\n"
@@ -130,6 +131,10 @@ bool process_file(const char *path, struct Args args) {
 			rename(tmp_path, path);
 			printf("Updated: '%s'\n", path);
 		}
+	} else if (args.update) {
+		if (changed) {
+			printf("Needs update: '%s'\n", path);
+		}
 	} else {
 		print_file(tmp_path);
 	}
@@ -187,8 +192,11 @@ int main(int argc, char **argv) {
 					case 'f': args.force = true; break;
 					case 'd': args.directory = true; break;
 					case 'r': args.recursive = true; break;
+
 					case 'l': args.list = true; break;
 					case 'o': args.overwrite = true; break;
+					case 'u': args.update = true; break;
+
 					case 's': args.use_spaces = true; break;
 					default:
 						printf("Invalid option: '%c'\n", *pch);
@@ -209,6 +217,8 @@ int main(int argc, char **argv) {
 			args.list = true;
 		} else if (isarg(arg, "-o", "--overwrite")){
 			args.overwrite = true;
+		} else if (isarg(arg, "-u", "--update")){
+			args.update = true;
 		} else if (isarg(arg, "-s", "--spaces")) {
 			args.use_spaces = true;
 		} else if (isarg(arg, "-t", "--tab-width") && i + 1 < argc) {

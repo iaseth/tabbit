@@ -7,7 +7,7 @@
 struct Args {
 	bool force;
 	bool directory, recursive;
-	bool overwrite, list;
+	bool overwrite, list, update;
 
 	bool use_spaces;
 	int tab_width;
