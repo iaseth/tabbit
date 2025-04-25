@@ -229,23 +229,23 @@ int main(int argc, char **argv) {
 
 	// First pass: parse flags
 	for (int i = 1; i < argc; i++) {
-		if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--force") == 0)
+		if (isarg(argv[i], "-f", "--force"))
 			args.force = true;
-		else if (strcmp(argv[i], "-d") == 0 || strcmp(argv[i], "--directory") == 0)
+		else if (isarg(argv[i], "-d", "--directory"))
 			args.directory = true;
-		else if (strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "--recursive") == 0)
+		else if (isarg(argv[i], "-r", "--recursive"))
 			args.recursive = true;
-		else if (strcmp(argv[i], "-x") == 0 || strcmp(argv[i], "--replace") == 0)
+		else if (isarg(argv[i], "-x", "--replace"))
 			args.replace = true;
-		else if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--spaces") == 0)
+		else if (isarg(argv[i], "-s", "--spaces"))
 			args.use_spaces = true;
-		else if ((strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--tab-width") == 0) && i + 1 < argc) {
+		else if (isarg(argv[i], "-t", "--tab-width") && i + 1 < argc) {
 			args.tab_width = atoi(argv[++i]);
 			if (args.tab_width <= 0) args.tab_width = 4;
-		} else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
+		} else if (isarg(argv[i], "-h", "--help")) {
 			print_help();
 			return 0;
-		} else if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
+		} else if (isarg(argv[i], "-v", "--version")) {
 			print_version();
 			return 0;
 		} else {
