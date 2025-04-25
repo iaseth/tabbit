@@ -6,7 +6,7 @@
 
 struct Args {
 	bool directory, recursive;
-	bool force, replace;
+	bool force, overwrite;
 	bool use_spaces;
 	int tab_width;
 };

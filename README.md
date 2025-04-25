@@ -35,14 +35,14 @@ tabbit [OPTIONS] path...
 
 ## ⚙️ Options
 
-| Flag                | Description                                              |
-|---------------------|----------------------------------------------------------|
+| Flag                 | Description                                              |
+|----------------------|----------------------------------------------------------|
 | `-f`, `--force`      | Process unknown file types or files >1MB                 |
 | `-d`, `--directory`  | Enable directory processing                              |
 | `-r`, `--recursive`  | Recurse into subdirectories                              |
-| `-x`, `--replace`    | Replace original files with the formatted output         |
-| `-t`, `--tab-width`  | Number of spaces that equal one tab (default: `4`)       |
+| `-o`, `--overwrite`  | Overwrite original files with the formatted output       |
 | `-s`, `--spaces`     | Use spaces instead of tabs for indentation               |
+| `-t`, `--tab-width`  | Number of spaces that equal one tab (default: `4`)       |
 | `-h`, `--help`       | Show help message                                        |
 | `-v`, `--version`    | Show version info                                        |
 

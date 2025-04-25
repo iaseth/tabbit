@@ -90,7 +90,7 @@ void print_help() {
 		"  -f, --force         Process files over 1MB or unknown extensions\n"
 		"  -d, --directory     Allow processing of directories\n"
 		"  -r, --recursive     Recurse into subdirectories\n"
-		"  -x, --replace       Replace original files with formatted version\n"
+		"  -o, --overwrite     Overwrite original files with formatted version\n"
 		"  -t, --tab-width N   Set tab width (default: 4)\n"
 		"  -s, --spaces        Use spaces instead of tabs\n"
 		"  -h, --help          Show help message\n"
@@ -172,11 +172,11 @@ bool process_file(const char *path, struct Args args) {
 	fclose(in);
 	fclose(out);
 
-	if (!args.replace) {
+	if (!args.overwrite) {
 		print_file(tmp_path);
 	}
 
-	if (changed && args.replace) {
+	if (changed && args.overwrite) {
 		remove(path);
 		rename(tmp_path, path);
 	} else {
@@ -220,7 +220,7 @@ int main(int argc, char **argv) {
 	args.force = false;
 	args.directory = false;
 	args.recursive = false;
-	args.replace = false;
+	args.overwrite = false;
 	args.use_spaces = false;
 	args.tab_width = 4;
 
@@ -235,8 +235,8 @@ int main(int argc, char **argv) {
 			args.directory = true;
 		else if (isarg(argv[i], "-r", "--recursive"))
 			args.recursive = true;
-		else if (isarg(argv[i], "-x", "--replace"))
-			args.replace = true;
+		else if (isarg(argv[i], "-o", "--overwrite"))
+			args.overwrite = true;
 		else if (isarg(argv[i], "-s", "--spaces"))
 			args.use_spaces = true;
 		else if (isarg(argv[i], "-t", "--tab-width") && i + 1 < argc) {
