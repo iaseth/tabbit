@@ -229,27 +229,43 @@ int main(int argc, char **argv) {
 
 	// First pass: parse flags
 	for (int i = 1; i < argc; i++) {
-		if (isarg(argv[i], "-f", "--force"))
+		const char *arg = argv[i];
+		if (strlen(arg) > 2 && arg[0] == '-' && arg[1] != '-') {
+			const char *pch = arg + 1;
+			while (*pch) {
+				switch (*pch) {
+					case 'f': args.force = true; break;
+					case 'd': args.directory = true; break;
+					case 'r': args.recursive = true; break;
+					case 'o': args.overwrite = true; break;
+					case 's': args.use_spaces = true; break;
+					default:
+						printf("Invalid option: '%c'\n", *pch);
+						return 1;
+				}
+				pch++;
+			}
+		} else if (isarg(arg, "-f", "--force")) {
 			args.force = true;
-		else if (isarg(argv[i], "-d", "--directory"))
+		} else if (isarg(arg, "-d", "--directory")) {
 			args.directory = true;
-		else if (isarg(argv[i], "-r", "--recursive"))
+		} else if (isarg(arg, "-r", "--recursive")) {
 			args.recursive = true;
-		else if (isarg(argv[i], "-o", "--overwrite"))
+		} else if (isarg(arg, "-o", "--overwrite")){
 			args.overwrite = true;
-		else if (isarg(argv[i], "-s", "--spaces"))
+		} else if (isarg(arg, "-s", "--spaces")) {
 			args.use_spaces = true;
-		else if (isarg(argv[i], "-t", "--tab-width") && i + 1 < argc) {
+		} else if (isarg(arg, "-t", "--tab-width") && i + 1 < argc) {
 			args.tab_width = atoi(argv[++i]);
 			if (args.tab_width <= 0) args.tab_width = 4;
-		} else if (isarg(argv[i], "-h", "--help")) {
+		} else if (isarg(arg, "-h", "--help")) {
 			print_help();
 			return 0;
-		} else if (isarg(argv[i], "-v", "--version")) {
+		} else if (isarg(arg, "-v", "--version")) {
 			print_version();
 			return 0;
 		} else {
-			paths[path_count++] = argv[i]; // not a flag => path
+			paths[path_count++] = arg; // not a flag => path
 		}
 	}
 
