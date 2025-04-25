@@ -8,6 +8,7 @@ add_executable(
 	tabbit
 	src/args.c
 	src/fsutils.c
+	src/tabbit.c
 	src/utils.c
 	src/main.c
 )
