@@ -11,6 +11,8 @@ struct Args {
 	int tab_width;
 };
 
+void initialize_args(struct Args *args);
+
 bool isarg(const char *arg, const char *long_name, const char *short_name);
 
 #endif

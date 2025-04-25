@@ -217,12 +217,7 @@ void traverse_dir(const char *path, struct Args args) {
 
 int main(int argc, char **argv) {
 	struct Args args;
-	args.force = false;
-	args.directory = false;
-	args.recursive = false;
-	args.overwrite = false;
-	args.use_spaces = false;
-	args.tab_width = 4;
+	initialize_args(&args);
 
 	const char *paths[argc];
 	int path_count = 0;
