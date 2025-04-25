@@ -7,6 +7,7 @@
 
 #include "args.h"
 #include "fsutils.h"
+#include "version.h"
 
 #define VERSION "0.1.0"
 #define MAX_PATH 4096
@@ -14,6 +15,8 @@
 #define READ_BUFFER_SIZE 8192
 
 
+
+const char* COMPILE_INFO = "Compiled on " __DATE__ " at " __TIME__;
 
 bool print_file(const char *path) {
 	FILE *file = fopen(path, "r");
@@ -36,22 +39,24 @@ void print_help() {
 		"  -f, --force         Process files over 1MB or unknown extensions\n"
 		"  -d, --directory     Allow processing of directories\n"
 		"  -r, --recursive     Recurse into subdirectories\n"
-		"  -o, --overwrite     Overwrite original files with formatted version\n"
+
+		"\n"
 		"  -t, --tab-width N   Set tab width (default: 4)\n"
 		"  -s, --spaces        Use spaces instead of tabs\n"
 
 		"\n"
-		"  -a, --args          Print args\n"
+		"  -o, --overwrite     Overwrite original files with formatted version\n"
 		"  -l, --list          Lists matching files\n"
 		"  -u, --update        Lists files needing updates\n"
 
 		"\n"
+		"  -a, --args          Print args\n"
 		"  -h, --help          Show help message\n"
 		"  -v, --version       Show version info");
 }
 
 void print_version() {
-	printf("tabbit %s\n", VERSION);
+	printf("%s - %s - %s\n", APP_NAME, VERSION_FULL_STR, COMPILE_INFO);
 }
 
 char *indent_line(const char *line, int tab_width, bool use_spaces) {
