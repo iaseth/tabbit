@@ -5,8 +5,10 @@
 
 
 struct Args {
+	bool force;
 	bool directory, recursive;
-	bool force, overwrite;
+	bool overwrite, list;
+
 	bool use_spaces;
 	int tab_width;
 };

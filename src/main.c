@@ -42,6 +42,7 @@ void print_help() {
 
 		"\n"
 		"  -a, --args          Print args\n"
+		"  -l, --list          Lists matching files\n"
 
 		"\n"
 		"  -h, --help          Show help message\n"
@@ -156,9 +157,12 @@ void traverse_dir(const char *path, struct Args args) {
 		if (entry->d_type == DT_DIR && args.recursive) {
 			traverse_dir(full_path, args);
 		} else if (entry->d_type == DT_REG) {
-			if ((has_known_extension(entry->d_name) || args.force) &&
-				(args.force || !file_too_large(full_path))) {
-				process_file(full_path, args);
+			if (has_known_extension(entry->d_name) || args.force) {
+				if (args.list) {
+					printf("File: '%s'\n", full_path);
+				} else if (args.force || !file_too_large(full_path)) {
+					process_file(full_path, args);
+				}
 			}
 		}
 	}
@@ -183,6 +187,7 @@ int main(int argc, char **argv) {
 					case 'f': args.force = true; break;
 					case 'd': args.directory = true; break;
 					case 'r': args.recursive = true; break;
+					case 'l': args.list = true; break;
 					case 'o': args.overwrite = true; break;
 					case 's': args.use_spaces = true; break;
 					default:
@@ -200,6 +205,8 @@ int main(int argc, char **argv) {
 			args.directory = true;
 		} else if (isarg(arg, "-r", "--recursive")) {
 			args.recursive = true;
+		} else if (isarg(arg, "-l", "--list")){
+			args.list = true;
 		} else if (isarg(arg, "-o", "--overwrite")){
 			args.overwrite = true;
 		} else if (isarg(arg, "-s", "--spaces")) {

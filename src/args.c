@@ -10,6 +10,7 @@ void initialize_args(struct Args *args) {
 	args->directory = false;
 	args->recursive = false;
 	args->overwrite = false;
+	args->list = false;
 	args->use_spaces = false;
 	args->tab_width = 4;
 }
@@ -28,6 +29,7 @@ void print_args(struct Args *args) {
 	print_boolean_arg("directory", args->directory);
 	print_boolean_arg("recursive", args->recursive);
 	print_boolean_arg("overwrite", args->overwrite);
+	print_boolean_arg("list", args->overwrite);
 	print_boolean_arg("use_spaces", args->use_spaces);
 	print_boolean_arg("tab_width", args->tab_width);
 }
