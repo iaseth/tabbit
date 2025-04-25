@@ -93,6 +93,11 @@ void print_help() {
 		"  -o, --overwrite     Overwrite original files with formatted version\n"
 		"  -t, --tab-width N   Set tab width (default: 4)\n"
 		"  -s, --spaces        Use spaces instead of tabs\n"
+
+		"\n"
+		"  -a, --args          Print args\n"
+
+		"\n"
 		"  -h, --help          Show help message\n"
 		"  -v, --version       Show version info");
 }
@@ -240,6 +245,9 @@ int main(int argc, char **argv) {
 				}
 				pch++;
 			}
+		} else if (isarg(arg, "-a", "--args")) {
+			print_args(&args);
+			return 0;
 		} else if (isarg(arg, "-f", "--force")) {
 			args.force = true;
 		} else if (isarg(arg, "-d", "--directory")) {
