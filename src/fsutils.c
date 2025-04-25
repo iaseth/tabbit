@@ -1,5 +1,6 @@
 #include "fsutils.h"
 
+#include <limits.h>
 #include <string.h>
 #include <sys/stat.h>
 
@@ -59,4 +60,17 @@ bool is_dir(const char *path) {
 bool file_too_large(const char *path) {
 	struct stat s;
 	return stat(path, &s) == 0 && s.st_size > MAX_FILE_SIZE;
+}
+
+int get_file_size(const char *filepath) {
+	struct stat st;
+	if (stat(filepath, &st) != 0) {
+		return 0; // Error occurred
+	}
+
+	if (st.st_size > INT_MAX) {
+		return 0; // Too large to fit in int
+	}
+
+	return (int)st.st_size;
 }

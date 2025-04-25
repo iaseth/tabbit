@@ -9,6 +9,19 @@
 
 
 
+void print_size_effect(int s1, int s2) {
+	const int diff = s2 - s1;
+	const double diff_percent = 100.0 * diff / s1;
+
+	if (diff > 0) {
+		printf(" --- up %d (%.2f%%)\n", diff, diff_percent);
+	} else if (diff < 0) {
+		printf(" --- down %d (%.2f%%)\n", -diff, -diff_percent);
+	} else {
+		printf(" --- same at %d\n", s1);
+	}
+}
+
 char *indent_line(const char *line, int tab_width, bool use_spaces) {
 	static char buf[MAX_LINE];
 	int indent_units = 0, i = 0;
@@ -80,15 +93,20 @@ bool process_file(const char *path, struct Args args) {
 	fclose(in);
 	fclose(out);
 
+	const int s1 = get_file_size(path);
+	const int s2 = get_file_size(tmp_path);
+
 	if (args.overwrite) {
 		if (changed) {
 			remove(path);
 			rename(tmp_path, path);
-			printf("Updated: '%s'\n", path);
+			printf("Updated: '%s'", path);
+			print_size_effect(s1, s2);
 		}
 	} else if (args.update) {
 		if (changed) {
-			printf("Needs update: '%s'\n", path);
+			printf("Needs update: '%s'", path);
+			print_size_effect(s1, s2);
 		}
 	} else {
 		print_file(tmp_path);
