@@ -123,17 +123,17 @@ bool process_file(const char *path, struct Args args) {
 	fclose(in);
 	fclose(out);
 
-	if (!args.overwrite) {
+	if (args.overwrite) {
+		if (changed) {
+			remove(path);
+			rename(tmp_path, path);
+			printf("Updated: '%s'\n", path);
+		}
+	} else {
 		print_file(tmp_path);
 	}
 
-	if (changed && args.overwrite) {
-		remove(path);
-		rename(tmp_path, path);
-	} else {
-		remove(tmp_path);
-	}
-
+	remove(tmp_path);
 	return true;
 }
 
